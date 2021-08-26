@@ -1,0 +1,11 @@
+
+
+feign:
+  okhttp:
+    enabled: true
+
+server:
+  port:
+
+geolocation-db:
+  url: https://geolocation-db.com/json

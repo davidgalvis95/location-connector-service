@@ -20,6 +20,12 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:3.0.3'
+    implementation 'io.github.openfeign:feign-jackson:11.1'
+    implementation 'io.github.openfeign:feign-okhttp:11.1'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.3'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.12.3'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.12.3'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
