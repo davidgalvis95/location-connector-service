@@ -1,7 +1,7 @@
 package com.weather.api.locationconnectorservice.infrastructure.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.weather.api.locationconnectorservice.infrastructure.client.LocationFeignClient;
+import com.weather.api.locationconnectorservice.infrastructure.client.GeoLocationDatabaseFeignClient;
 import feign.Feign;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
@@ -22,12 +22,12 @@ public class FeignClientConfig {
     }
 
     @Bean
-    public LocationFeignClient nationalRegistryFeignClient(@Qualifier("locationObjectMapper") final ObjectMapper objectMapper) {
+    public GeoLocationDatabaseFeignClient nationalRegistryFeignClient(@Qualifier("locationObjectMapper") final ObjectMapper objectMapper) {
         log.info("Creating LocationFeignClient");
         return Feign.builder()
                 .encoder(new JacksonEncoder(objectMapper))
                 .decoder(new JacksonDecoder(objectMapper))
 //                .errorDecoder( new ExternalProcessingErrorDecoder() )
-                .target(LocationFeignClient.class, geolocationApiUrl);
+                .target(GeoLocationDatabaseFeignClient.class, geolocationApiUrl);
     }
 }

@@ -1,17 +1,23 @@
 package com.weather.api.locationconnectorservice.application.controller;
 
 import com.weather.api.locationconnectorservice.domain.dto.LocationDto;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/vi/location")
 public class LocationServiceController {
 
-    @GetMapping
-    public LocationDto getCurrentLocation() {
 
-        return LocationDto.builder().build();
+    @PostMapping()
+    public ResponseEntity<Void> generateLocation(@RequestParam final Long longitude, @RequestParam final Long latitude){
+        return new ResponseEntity<Void>(HttpStatus.OK);
     }
+
+//    @GetMapping
+//    public LocationDto getCurrentLocation() {
+//
+//        return LocationDto.builder().build();
+//    }
 }

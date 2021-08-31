@@ -6,8 +6,8 @@ import feign.RequestLine;
 
 @Headers( { "Accept: application/json",
         "Content-Type: application/json" } )
-public interface LocationFeignClient {
+public interface GeoDBOpenAPIFeignClient {
 
     @RequestLine( "GET" )
-    LocationDto getLeadFromNationalRegistry();
+    LocationDto getLocationFromCoordinates();
 }
