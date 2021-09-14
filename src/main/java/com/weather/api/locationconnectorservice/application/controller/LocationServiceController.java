@@ -1,6 +1,5 @@
 package com.weather.api.locationconnectorservice.application.controller;
 
-import com.weather.api.locationconnectorservice.domain.dto.LocationDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

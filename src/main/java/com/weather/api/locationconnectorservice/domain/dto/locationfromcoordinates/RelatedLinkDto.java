@@ -1,4 +1,4 @@
-package com.weather.api.locationconnectorservice.domain.dto;
+package com.weather.api.locationconnectorservice.domain.dto.locationfromcoordinates;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

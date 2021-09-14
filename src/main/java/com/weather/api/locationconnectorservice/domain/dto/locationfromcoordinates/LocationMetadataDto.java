@@ -1,4 +1,4 @@
-package com.weather.api.locationconnectorservice.domain.dto;
+package com.weather.api.locationconnectorservice.domain.dto.locationfromcoordinates;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,30 +1,31 @@
 package com.weather.api.locationconnectorservice.domain.service;
 
+import com.weather.api.locationconnectorservice.domain.dto.LocationDto;
+import com.weather.api.locationconnectorservice.domain.model.Location;
+import com.weather.api.locationconnectorservice.infrastructure.exception.LocationNotFoundException;
+import com.weather.api.locationconnectorservice.infrastructure.gatewaymanager.GatewayManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Stream;
-
 @Service
-public class LocationService {
+public abstract class LocationService {
 
-    public void processLocation(final Long latitude, final Long longitude){
+    private final GatewayManager locationGatewayManager;
 
-        final boolean areThereCoordinates = Stream.of(Optional.ofNullable(latitude), Optional.ofNullable(longitude))
-                .flatMap(Optional::stream)
-                .allMatch(Objects::nonNull);
+    @Autowired
+    protected LocationService(final GatewayManager locationGatewayManager) {
+        this.locationGatewayManager = locationGatewayManager;
+    }
 
-        if(areThereCoordinates){
+    public Location processRequest(final Double latitude, final Double longitude){
 
+        try {
+            final LocationDto locationDto = locationGatewayManager.buildRequestAndGetLocation(latitude, longitude).orElseThrow(() -> new RuntimeException("The location was not found"));
+            //TODO use specialized translators to translate from the types received into the Location model
+
+            return null;
+        }catch (Exception exception){
+            throw new LocationNotFoundException("Unable to get location from the external API server");
         }
-    }
-
-    private void processLocationFromCoordinates(final Long latitude, final Long longitude){
-
-    }
-
-    private void processLocationWithoutPriorInfo(){
-
     }
 }

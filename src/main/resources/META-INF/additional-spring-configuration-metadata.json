@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "location.geolocation-db.url",
+      "type": "java.lang.String",
+      "description": "Description for location.geolocation-db.url."
+  }
+] }

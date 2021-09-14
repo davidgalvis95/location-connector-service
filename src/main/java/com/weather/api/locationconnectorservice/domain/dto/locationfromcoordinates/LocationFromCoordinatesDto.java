@@ -1,6 +1,8 @@
-package com.weather.api.locationconnectorservice.domain.dto;
+package com.weather.api.locationconnectorservice.domain.dto.locationfromcoordinates;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.weather.api.locationconnectorservice.domain.dto.LocationDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.ToString;
@@ -12,7 +14,8 @@ import java.util.List;
 @Builder
 @ToString
 @AllArgsConstructor
-public class LocationFromCoordinatesDto {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class LocationFromCoordinatesDto implements LocationDto {
 
     @JsonProperty("data")
     List<NearLocationDto> nearestLocations;

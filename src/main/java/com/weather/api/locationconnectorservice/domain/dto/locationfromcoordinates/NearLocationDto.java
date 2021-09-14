@@ -1,9 +1,10 @@
-package com.weather.api.locationconnectorservice.domain.dto;
+package com.weather.api.locationconnectorservice.domain.dto.locationfromcoordinates;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.ToString;
 import lombok.Value;
+
 
 @Value
 @Builder
@@ -15,8 +16,7 @@ public class NearLocationDto {
 
     String wikiDataId;
 
-//    TODO this can be converted into enum
-    String type;
+    LocationType type;
 
     String city;
 
@@ -30,11 +30,11 @@ public class NearLocationDto {
 
     String regionCode;
 
-    Long latitude;
+    Double latitude;
 
-    Long longitude;
+    Double longitude;
 
-    Long population;
+    Integer population;
 
     Double distance;
 

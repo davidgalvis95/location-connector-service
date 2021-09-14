@@ -16,6 +16,7 @@ public class LocationController {
 
     private final LocationService locationService;
 
+    //TODO pass the b64 encoded user context and a valid apiKey to get the location
     @PostMapping()
     public ResponseEntity<Void> generateLocation(@RequestParam final Long longitude, final Long latitude){
 
