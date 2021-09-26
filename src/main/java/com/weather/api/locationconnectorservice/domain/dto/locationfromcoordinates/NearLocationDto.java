@@ -1,5 +1,6 @@
 package com.weather.api.locationconnectorservice.domain.dto.locationfromcoordinates;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.ToString;
@@ -7,9 +8,10 @@ import lombok.Value;
 
 
 @Value
-@Builder
+@Builder(toBuilder = true)
 @ToString
 @AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class NearLocationDto {
 
     Integer id;
@@ -37,5 +39,7 @@ public class NearLocationDto {
     Integer population;
 
     Double distance;
+
+    String postalCode;
 
 }

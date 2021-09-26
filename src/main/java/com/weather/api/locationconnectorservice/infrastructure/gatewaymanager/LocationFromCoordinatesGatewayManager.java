@@ -1,23 +1,28 @@
 package com.weather.api.locationconnectorservice.infrastructure.gatewaymanager;
 
 import com.weather.api.locationconnectorservice.domain.dto.Request;
-import com.weather.api.locationconnectorservice.domain.dto.RequestObject;
+import com.weather.api.locationconnectorservice.domain.dto.RequestObjectWithCoordinates;
 import com.weather.api.locationconnectorservice.domain.dto.locationfromcoordinates.LocationFromCoordinatesDto;
-import lombok.AllArgsConstructor;
+import com.weather.api.locationconnectorservice.infrastructure.client.GeoAPIClient;
+import com.weather.api.locationconnectorservice.infrastructure.client.GeoDBOpenAPIFeignClient;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @NoArgsConstructor
 public class LocationFromCoordinatesGatewayManager extends LocationGatewayManager<LocationFromCoordinatesDto>{
 
     @Override
-    public LocationFromCoordinatesDto getLocation(Request<?> request) {
-        return null;
+    public LocationFromCoordinatesDto getLocation(final Request<?> request, final GeoAPIClient client) {
+        final Request<RequestObjectWithCoordinates> requestObjectWithCoordinatesRequest = (Request<RequestObjectWithCoordinates>) request;
+        return Optional.ofNullable(requestObjectWithCoordinatesRequest.getPayload())
+                .map(requestBody -> {
+                    final String location = requestBody.getLatitude().toString().concat(requestBody.getLongitude().toString());
+                     return ((GeoDBOpenAPIFeignClient) client).getLocationFromCoordinates(requestBody.getApiHost(), requestBody.getApiKey(), location, requestBody.getRadius());
+                }).orElse(null);
     }
 
-
-//    @Override
-//    public LocationFromCoordinatesDto getLocation(final Request<RequestObjectWithCoordinates> request){
-//        return LocationFromCoordinatesDto.builder().build();
-//    }
+    public String getPostalCodeFromCoordinates(final Double latitude, final Double longitude, PostalCodeGatewayManager postalCodeGatewayManager){
+        return postalCodeGatewayManager.getPostalCode(latitude, longitude);
+    }
 }
