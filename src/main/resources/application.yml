@@ -1,14 +1,14 @@
-
+spring:
+  profiles:
+    active: dev
 
 feign:
   okhttp:
     enabled: true
 
 server:
-  port:
+  port: 8100
 
 location:
-  geolocation-db:
-    url: https://geolocation-db.com/json
-  geo-db-open-api:
-    url: https://wft-geo-db.p.rapidapi.com
+  api:
+    env: dev

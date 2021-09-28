@@ -7,6 +7,7 @@ import com.weather.api.locationconnectorservice.domain.model.Location;
 import com.weather.api.locationconnectorservice.infrastructure.client.GeoAPIClient;
 import com.weather.api.locationconnectorservice.infrastructure.client.GeoDBOpenAPIFeignClient;
 import com.weather.api.locationconnectorservice.infrastructure.client.GeoLocationDatabaseFeignClient;
+import com.weather.api.locationconnectorservice.infrastructure.config.GeolocationApiConfig;
 import com.weather.api.locationconnectorservice.infrastructure.exception.InconvertibleLocationTypeException;
 import com.weather.api.locationconnectorservice.infrastructure.gatewaymanager.GatewayManager;
 import lombok.extern.slf4j.Slf4j;
@@ -25,18 +26,22 @@ public class LocationService {
 
     private final Set<GeoAPIClient> locationGatewayClients;
 
+    private Set<GeolocationApiConfig.GeolocationContext> geolocationContexts;
+
     @Autowired
     public LocationService(@Qualifier("locationGatewayManager") final GatewayManager locationGatewayManager,
+                           @Qualifier("geolocationContexts") final Set<GeolocationApiConfig.GeolocationContext> geolocationContexts,
                            final GeoLocationDatabaseFeignClient geoLocationDatabaseFeignClient,
                            final GeoDBOpenAPIFeignClient geoDBOpenAPIFeignClient) {
         this.locationGatewayManager = locationGatewayManager;
         this.locationGatewayClients = Set.of(geoLocationDatabaseFeignClient, geoDBOpenAPIFeignClient);
+        this.geolocationContexts = geolocationContexts;
     }
 
     public Location processRequest(final Double latitude, final Double longitude) throws RuntimeException {
 
         try {
-            return locationGatewayManager.buildRequestAndGetLocation(latitude, longitude, locationGatewayClients)
+            return locationGatewayManager.buildRequestAndGetLocation(latitude, longitude, locationGatewayClients, geolocationContexts)
                     .map(locationDto -> Pair.of(locationDto, locationDto.getClass()))
                     .map(locationPair -> mapFromLocationDtoToLocation(locationPair.getLeft(), locationPair.getRight()))
                     .orElseThrow(() -> new RuntimeException("The location was not found"));

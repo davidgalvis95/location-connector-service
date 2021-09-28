@@ -8,24 +8,13 @@ import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 @Slf4j
 @Configuration
-@ConfigurationProperties(prefix = "location")
 public class FeignClientConfig {
-
-    private final String geolocationApiUrl;
-    private final String geoDBOpenApiUrl;
-
-    public FeignClientConfig(@Value("${geolocation-db.url}") final String geolocationApiUrl,
-                             @Value("${geo-db-open-api.url}") final String geoDBOpenApiUrl) {
-        this.geolocationApiUrl = geolocationApiUrl;
-        this.geoDBOpenApiUrl = geoDBOpenApiUrl;
-    }
 
     @Bean("geolocationDecoder")
     public GeolocationDatabaseFeignErrorDecoder geolocationDatabaseFeignErrorDecoder() {
@@ -33,24 +22,54 @@ public class FeignClientConfig {
     }
 
     @Bean
-    public GeoLocationDatabaseFeignClient geoLocationDatabaseFeignClient(@Qualifier("locationObjectMapper") final ObjectMapper objectMapper,
-                                                                         @Qualifier("geolocationDecoder") GeolocationDatabaseFeignErrorDecoder geolocationDatabaseFeignErrorDecoder) {
-        log.info("Creating GeoLocationDatabaseFeignClient");
+    @Profile("dev")
+    public GeoLocationDatabaseFeignClient devGeoLocationDatabaseFeignClient(@Qualifier("locationObjectMapper") final ObjectMapper objectMapper,
+                                                                            @Qualifier("geolocationDecoder") GeolocationDatabaseFeignErrorDecoder geolocationDatabaseFeignErrorDecoder,
+                                                                            @Qualifier("devGeoDbApiContext") GeolocationApiConfig.GeolocationContext openApiContext) {
+        log.info("Creating GeoLocationDatabaseFeignClient: PROD");
         return Feign.builder()
                 .encoder(new JacksonEncoder(objectMapper))
                 .decoder(new JacksonDecoder(objectMapper))
                 .errorDecoder(geolocationDatabaseFeignErrorDecoder)
-                .target(GeoLocationDatabaseFeignClient.class, geolocationApiUrl);
+                .target(GeoLocationDatabaseFeignClient.class, openApiContext.getUrl());
     }
 
     @Bean
-    public GeoDBOpenAPIFeignClient geoDBOpenAPIFeignClient(@Qualifier("locationObjectMapper") final ObjectMapper objectMapper,
-                                                           @Qualifier("geolocationDecoder") GeolocationDatabaseFeignErrorDecoder geolocationDatabaseFeignErrorDecoder) {
-        log.info("Creating GeoDBOpenAPIFeignClient");
+    @Profile("prod")
+    public GeoLocationDatabaseFeignClient geoLocationDatabaseFeignClient(@Qualifier("locationObjectMapper") final ObjectMapper objectMapper,
+                                                                         @Qualifier("geolocationDecoder") GeolocationDatabaseFeignErrorDecoder geolocationDatabaseFeignErrorDecoder,
+                                                                         @Qualifier("prodGeoDbApiContext") GeolocationApiConfig.GeolocationContext openApiContext) {
+        log.info("Creating GeoLocationDatabaseFeignClient: DEV");
         return Feign.builder()
                 .encoder(new JacksonEncoder(objectMapper))
                 .decoder(new JacksonDecoder(objectMapper))
                 .errorDecoder(geolocationDatabaseFeignErrorDecoder)
-                .target(GeoDBOpenAPIFeignClient.class, geoDBOpenApiUrl);
+                .target(GeoLocationDatabaseFeignClient.class, openApiContext.getUrl());
+    }
+
+    @Bean
+    @Profile("dev")
+    public GeoDBOpenAPIFeignClient devGeoDBOpenAPIFeignClient(@Qualifier("locationObjectMapper") final ObjectMapper objectMapper,
+                                                              @Qualifier("geolocationDecoder") GeolocationDatabaseFeignErrorDecoder geolocationDatabaseFeignErrorDecoder,
+                                                              @Qualifier("devGeoOpenApiContext") GeolocationApiConfig.GeolocationContext openApiContext) {
+        log.info("Creating GeoDBOpenAPIFeignClient: DEV");
+        return Feign.builder()
+                .encoder(new JacksonEncoder(objectMapper))
+                .decoder(new JacksonDecoder(objectMapper))
+                .errorDecoder(geolocationDatabaseFeignErrorDecoder)
+                .target(GeoDBOpenAPIFeignClient.class, openApiContext.getUrl());
+    }
+
+    @Bean
+    @Profile("prod")
+    public GeoDBOpenAPIFeignClient geoDBOpenAPIFeignClient(@Qualifier("locationObjectMapper") final ObjectMapper objectMapper,
+                                                           @Qualifier("geolocationDecoder") GeolocationDatabaseFeignErrorDecoder geolocationDatabaseFeignErrorDecoder,
+                                                           @Qualifier("devGeoOpenApiContext") GeolocationApiConfig.GeolocationContext openApiContext) {
+        log.info("Creating GeoDBOpenAPIFeignClient: PROD");
+        return Feign.builder()
+                .encoder(new JacksonEncoder(objectMapper))
+                .decoder(new JacksonDecoder(objectMapper))
+                .errorDecoder(geolocationDatabaseFeignErrorDecoder)
+                .target(GeoDBOpenAPIFeignClient.class, openApiContext.getUrl());
     }
 }
