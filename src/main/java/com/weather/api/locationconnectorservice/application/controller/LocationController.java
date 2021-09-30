@@ -1,5 +1,7 @@
 package com.weather.api.locationconnectorservice.application.controller;
 
+import com.weather.api.locationconnectorservice.domain.model.Location;
+import com.weather.api.locationconnectorservice.domain.model.Response;
 import com.weather.api.locationconnectorservice.domain.service.LocationService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -8,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.OffsetDateTime;
 
 @AllArgsConstructor
 @RestController
@@ -18,11 +22,25 @@ public class LocationController {
 
     //TODO pass the b64 encoded user context and a valid apiKey to get the location
     @PostMapping()
-    public ResponseEntity<Void> generateLocation(@RequestParam(name = "longitude", required = false) final Long longitude,
-                                                 @RequestParam(name = "latitude", required = false) final Long latitude){
+    public ResponseEntity<Response<Location>> generateLocation(@RequestParam(name = "longitude", required = false) final Double longitude,
+                                                               @RequestParam(name = "latitude", required = false) final Double latitude) {
 
+        Response<Location> response = new Response<>();
+        try {
 
-        return new ResponseEntity<Void>(HttpStatus.OK);
+            final Location location = locationService.processRequest(latitude, longitude);
+            response.setPayload(location);
+            response.setDateTime(OffsetDateTime.now());
+            response.setStatusCode(HttpStatus.OK.value());
+            return ResponseEntity.ok().body(response);
+
+        } catch (RuntimeException exception) {
+
+            response.setPayload(Location.builder().build());
+            response.setDateTime(OffsetDateTime.now());
+            response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return ResponseEntity.ok().body(response);
+        }
     }
 
 }

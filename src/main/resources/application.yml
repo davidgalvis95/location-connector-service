@@ -9,6 +9,15 @@ feign:
 server:
   port: 8100
 
-location:
-  api:
-    env: dev
+#location:
+#  api:
+#    env: dev
+#    geolocations:
+#      geolocation-db:
+#        url: https://geolocation-db.com/json
+#        host: null
+#        api-key: null
+#      geolocation-open:
+#        url: https://wft-geo-db.p.rapidapi.com
+#        host: wft-geo-db.p.rapidapi.com
+#        api-key: bb2b00df27msh071e1e385987c1ep1cf96ejsna3bd421d334d

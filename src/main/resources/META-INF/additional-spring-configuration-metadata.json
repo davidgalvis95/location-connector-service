@@ -4,5 +4,10 @@
       "name": "location.geolocation-db.url",
       "type": "java.lang.String",
       "description": "Description for location.geolocation-db.url."
-  }
-] }
+    },
+    {
+      "name": "location",
+      "type": "java.lang.Object",
+      "description": "Description for location."
+    }
+  ] }

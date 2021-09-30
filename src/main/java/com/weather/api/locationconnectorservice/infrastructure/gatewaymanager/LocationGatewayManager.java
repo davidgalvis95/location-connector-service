@@ -4,6 +4,7 @@ import com.weather.api.locationconnectorservice.domain.dto.LocationDto;
 import com.weather.api.locationconnectorservice.domain.dto.Request;
 import com.weather.api.locationconnectorservice.domain.dto.RequestObjectWithCoordinates;
 import com.weather.api.locationconnectorservice.domain.dto.locationfromcoordinates.LocationFromCoordinatesDto;
+import com.weather.api.locationconnectorservice.domain.model.GeolocationApiContext;
 import com.weather.api.locationconnectorservice.infrastructure.client.GeoAPIClient;
 import com.weather.api.locationconnectorservice.infrastructure.client.GeoDBOpenAPIFeignClient;
 import com.weather.api.locationconnectorservice.infrastructure.client.GeoLocationDatabaseFeignClient;
@@ -51,7 +52,7 @@ public class LocationGatewayManager<T extends LocationDto> implements GatewayMan
             Iterator<GeolocationApiConfig.GeolocationContext> iterator = geolocationContexts.iterator();
 
             while (iterator.hasNext()) {
-                if (Objects.nonNull(iterator.next().getApiKey()) && Objects.nonNull(iterator.next().getHost())) {
+                if (iterator.next().getName().equals(GeolocationApiContext.GEOLOCATION_OPEN_API.getValue())) {
 
                     requestBody = buildRequestFromCoordinates(iterator.next().getHost(),
                             iterator.next().getApiKey(),
